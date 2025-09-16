@@ -44,15 +44,18 @@ int main(){
         exit(1);
     }
     if(new_pid){
+        int infofils;
+        wait(&infofils);
+        printf("Le père a récupéré le code de retour du fils : %d\n", WEXITSTATUS(infofils));
         printf("\nJe suis le père, voici mes informations : \n");
         print_proc_info();
         printf("\nJe suis le père et je me termine, mon code de retour est %d\n", getpid());
+        exit(0);
     } else {
         printf("\nJe suis le fils, voici mes informations : \n");
         print_proc_info();
-        printf("\nJe suis le fils et je me termine, mon code de retour est %d\n", getpid());
     }
-    wait(NULL);
+   
     exit(0);
 
 return 0;
