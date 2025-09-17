@@ -24,6 +24,9 @@ void print_proc_info(void) {
     printf("PID   : %d\n", pid);
     printf("PPID  : %d\n", ppid);
     printf("PGRP  : %d\n", pgrp);
+    printf("LOGIN : %s\n", getlogin());
+    printf("UID   : %d\n", getuid());
+    printf("GID   : %d\n", getgid());
    
 
 
