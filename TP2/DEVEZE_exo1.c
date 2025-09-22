@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 #define POSIX_C_SOURCE 200809L
 #define TAILLE_BLOC 512
 
@@ -21,7 +22,7 @@ void ecrire_dans_stdout(char nom_fich[]){
     ssize_t NbEcrits=0;
 
     while(bytesRead > 0){
-        NbEcrits=write(STDOUT,buffer,bytesRead);
+        NbEcrits=write(STDOUT_FILENO,buffer,bytesRead);
         bytesRead = read(src, buffer, sizeof(buffer)); // Mettre à jour bytesRead pour la prochaine itération
     }
 
@@ -42,12 +43,16 @@ void ecrire_dans_stdout(char nom_fich[]){
 
 
 
-
-
-
-
-
 int main(int argc, char* argv[]) {
+
+if (argc != 2) {
+        fprintf(stderr, "Usage: %s <nom_fichier>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    ecrire_dans_stdout(argv[1]);
+
+    return 0;
 
 
 }
