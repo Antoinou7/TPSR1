@@ -3,12 +3,13 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #define POSIX_C_SOURCE 200809L
 #define TAILLE_BLOC 512
 
-void read(char nom_fich[]) {
+void readbase(char nom_fich[]) {
      int src = open(nom_fich, O_RDONLY);
    
    
@@ -83,22 +84,16 @@ void read_redir(char src[], char dest[]) {
 
 
 
-
-
-
-
 int main (int argc,char *argv[]){
-    if (argc < 3 ) {
+    if (argc < 2 ) {
         fprintf(stderr, "Usage: %s fichier [\">\" fichier ]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
     int redirection = 0;
-    int rangmax = 0;
 
     for(int i =0;i<argc;i++){
         if((strcmp(argv[i], ">") == 0 && (i == (argc-2)))) {
             redirection = 1;
-            rangmax = i;
         }
         break;
     }
@@ -112,7 +107,7 @@ int main (int argc,char *argv[]){
                 exit(EXIT_FAILURE);
             }
             if (new_pid==0){
-                read(argv[i]);
+                readbase(argv[i]);
             }
             exit(EXIT_SUCCESS);
         }
@@ -137,4 +132,5 @@ int main (int argc,char *argv[]){
 
 
     return 0;
+}
 }
