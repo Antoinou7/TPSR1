@@ -43,20 +43,26 @@ int main(int argc, char* argv[]) {
             exit(3);
         }
 
-
+        char path[512];
         struct dirent* elem;
+        int nbrfichregvide=0;
         while((elem=readdir(rep))!=NULL){
 
-            if(lstat(elem->d_name,&Infos)!=0){
+            snprintf(path,sizeof(path),"%s/%s",argv[1],elem->d_name);
+
+            if(lstat(path,&Infos)!=0){
                 perror("lstat, argc==2");
                 exit(4);
             }
-
-            printf("%-10s",elem->d_name);
-            Affiche_inode(&Infos);
+            if(S_ISREG(Infos.st_mode) && Infos.st_size==0){
+                printf("%-10s",elem->d_name);
+                Affiche_inode(&Infos);
+                nbrfichregvide++;
+            }
 
 
         }
+        printf("%d fichier(s) vide(s) trouvé(s)\n",nbrfichregvide);
         closedir(rep);
     } else{ 
 

@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <dirent.h>
+#include <pwd.h>
 
 void Affiche_inode(struct stat* Infos){
     char* type = S_ISREG(Infos->st_mode) ? "fichier ordinaire" :
@@ -19,7 +20,7 @@ void Affiche_inode(struct stat* Infos){
                   S_ISSOCK(Infos->st_mode) ? "socket" : "inconnu";
 
 
-    printf("  %s   %ld octets  %s\n",type, Infos->st_size, ctime(&(Infos->st_mtime)));
+    printf("  %s   %ld octets %s  %s\n",type, Infos->st_size, getpwuid(Infos->st_uid)->pw_name, ctime(&(Infos->st_mtime)));
 }
 
 
