@@ -25,19 +25,21 @@ void Affiche_inode(struct stat* Infos){
 
 int main(int argc, char* argv[]) {
 
-    if(argc!=2) {
+    if(argc<2) {
         fprintf(stderr,"Usage : %s fich\n",argv[0]);
         exit(1);
     }
 
 
     struct stat Infos;
-  if(lstat(argv[1],&Infos)!=0) {
+    for(int i=1; i<argc; i++){
+  if(lstat(argv[i],&Infos)!=0) {
     perror("lstat");
     exit(2);
   }
-  printf("%s",argv[1]);
+  printf("%-10s",argv[i]);
   Affiche_inode(&Infos);
+    }
 
 
 return 0;
