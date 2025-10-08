@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <time.h>
 #include <dirent.h>
+#include <limits.h>
 
 void Affiche_inode(struct stat* Infos){
     char* type = S_ISREG(Infos->st_mode) ? "fichier ordinaire" :
@@ -32,8 +33,9 @@ int main(int argc, char* argv[]) {
     }
 
     struct stat Infos;
-    if(argc==2){
-        
+    lstat(argv[1],&Infos);
+    if(argc==2 && S_ISDIR(Infos.st_mode)){
+
         DIR* rep;
         rep=opendir(argv[1]);
        
@@ -45,9 +47,11 @@ int main(int argc, char* argv[]) {
 
 
         struct dirent* elem;
+        char path[PATH_MAX+1];
         while((elem=readdir(rep))!=NULL){
 
-            if(lstat(elem->d_name,&Infos)!=0){
+            snprintf(path, PATH_MAX, "%s/%s", argv[1], elem->d_name);
+            if(lstat(path,&Infos)==-1){
                 perror("lstat, argc==2");
                 exit(4);
             }
