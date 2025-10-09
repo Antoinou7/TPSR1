@@ -15,7 +15,7 @@ int main () {
     int Etat[2];
     int entier1 = 1;
     int entierm1 = -1;
-    int nblus;
+    int nblus, value;
     int bassin;
     int infofils;
     int f_flags;
@@ -39,20 +39,23 @@ int main () {
         close(Remplir[1]);
         close(Etat[0]);
        
-        while((nblus=read(Remplir[0],(void*)&nblus,sizeof(nblus)))>0){
-            if(nblus>=0){
-                bassin+=nblus;
+        while((nblus=read(Remplir[0],(void*)&value,sizeof(int)))>0){
+            if(value>0){
+                bassin+=value;
                 printf("*");
                 fflush(stdout);
-            if(bassin>MAX_BASSIN){
-                if(write(Etat[1],(void*)&bassin,sizeof(bassin))==-1) {
+            if(bassin>=MAX_BASSIN){
+                if(write(Etat[1],(void*)&bassin,sizeof(int))==-1) {
                     perror("Echec write du fils dans le tube Etat");
                     exit(8);
+                }
             }
-            } else{
-                bassin=0;
-                printf("\n");
-            }
+        }
+        else{
+            bassin=0;
+            printf("\n");
+            fflush(stdout);
+        }
         }
         close(Remplir[0]);
         close(Etat[1]);
@@ -77,7 +80,7 @@ int main () {
             }
 
 
-            if((nblus=read(Etat[0],(void*)&entierm1,sizeof(entierm1)))>0){
+            if((nblus=read(Etat[0],(void*)&value,sizeof(value)))>0){
                 if(write(Remplir[1],(void*)&entierm1,sizeof(entierm1))==-1){
                     perror("Echec write du père dans le tube Remplir");
                     exit(6);
@@ -95,9 +98,7 @@ int main () {
         printf("\n");
         printf("[Père] : Mon fils %d est terminé avec le code de retour : %d\n",getpid(),WEXITSTATUS(infofils));
         exit(0);
-
-
     }
-    }
-    return 0;
+
+     return 0;
 }
